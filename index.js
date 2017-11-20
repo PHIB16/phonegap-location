@@ -38,7 +38,7 @@ function successPosition(position) {
     var speed = position.coords.speed;
     
 	//OK. Now we want to update the display with the correct values
-	$('#time').val("Recieved data at " + date);
+	$('#time').val("Recieved data at " + unixtime);
 	$('#lattext').val(latitude);
 	$('#longtext').val(longitude);
     $('#alttext').val(altitude);
