@@ -1,25 +1,42 @@
+var watchID;
+
+var locationOptions = { 
+	maximumAge: 10000, 
+	timeout: 6000, 
+	enableHighAccuracy: true 
+};
+
 //when the jQuery Mobile page is initialised
 $(document).on('pageinit', function() {
 	
 	//set up listener for button click
-	$(document).on('click', getPosition);
+	$('#startLocationButton').on('click', updatePosition);
+	$('#stopLocationButton').on('click', stopPosition);
 	
 	//change time box to show message
 	$('#time').val("Press the button to get location data");
 	
 });
 
-
-//Call this function when you want to get the current position
-function getPosition() {
+//Call this function when you want to watch for chnages in position
+function updatePosition() {
 	
 	//change time box to show updated message
 	$('#time').val("Getting data...");
 	
 	//instruct location service to get position with appropriate callbacks
-	navigator.geolocation.getCurrentPosition(successPosition, failPosition);
+	watchID = navigator.geolocation.watchPosition(successPosition, failPosition, locationOptions);
 }
 
+//Call this function when you want to watch for chnages in position
+function stopPosition() {
+	
+	//change time box to show updated message
+	$('#time').val("Press the button to get location data");
+	
+	//instruct location service to get position with appropriate callbacks
+	navigator.geolocation.clearWatch(watchID);
+}
 
 //called when the position is successfully determined
 function successPosition(position) {
