@@ -1,92 +1,46 @@
-<!-- For more info on jQuery Mobile,  touch gestures and other useful events see : http://api.jquerymobile.com/category/events/ -->
-
-$(document).on("pagecreate","#pageone",function(){
-    
-    
-    $('#taptext').on("tap",function(){
-        
-      // submitText();
-      $("#responseText").text( randomAnswer());
-        beepOrVibrate();
-    });
-    
-    var onShake = submitText();
-     shake.startWatch(onShake, 40);
-    
-  	   
-    
+//when the jQuery Mobile page is initialised
+$(document).on('pageinit', function() {
+	
+	//set up listener for button click
+	$(document).on('click', getPosition);
+	
+	//change time box to show message
+	$('#time').val("Press the button to get location data");
+	
 });
 
-var responses = [
-        "Yes",
-        "No",
-        "Maybe",
-        "Why are you asking me?",
-        "Are you sure about that?",
-        "Depends",
-        "Please insert bribe for answer",
-        "Don't do it",
-        "Do it",
-        "Elton John",
-        "If you say so",
-    ]
 
-
-
-
-
-function beepOrVibrate(){
-    
-     var rand = random();
-        
-    	
-        
-        if(rand){
-            beep();
-           
-           }
-        else {
-            vibrate();
-            
-        }
-    
+//Call this function when you want to get the current position
+function getPosition() {
+	
+	//change time box to show updated message
+	$('#time').val("Getting data...");
+	
+	//instruct location service to get position with appropriate callbacks
+	navigator.geolocation.getCurrentPosition(successPosition, failPosition);
 }
 
 
-function random() {
-    
-    var num = Math.round(Math.random() * 10);
-    
-    return num;
-    
-    
+//called when the position is successfully determined
+function successPosition(position) {
+	
+	//You can find out more details about what the position obejct contains here:
+	// http://www.w3schools.com/html/html5_geolocation.asp
+	
+
+	//lets get some stuff out of the position object
+	var time = position.timestamp;
+	var latitude = position.coords.latitude;
+	
+	//OK. Now we want to update the display with the correct values
+	$('#time').val("Recieved data at " + time);
+	$('#lattext').val("I should contain the latitude data...");
+	
 }
 
-
-function randomAnswer(){
-    var result = responses[random()];
-	return result;
-}
-
-function beep(){
-    
-   
-            navigator.notification.beep(1);
-           
-     
-        
-}
-
-
-    
-function vibrate(){
-        //vibrate for 2000 milliseconds
-        navigator.vibrate(2000);
-        
-    }
-
-function submitText() {
-	//var text = $('#textinput').val();
-    $("#responseText").text( randomAnswer());
-    beepOrVibrate();
+//called if the position is not obtained correctly
+function failPosition(error) {
+	//change time box to show updated message
+	$('#time').val("Error getting data: " + error);
+	
 }
